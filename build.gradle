@@ -48,6 +48,11 @@ dependencies {
   implementation 'ca.uhn.hapi.fhir:hapi-fhir-structures-dstu2:5.7.0'
   implementation 'ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.7.0'
   implementation 'ca.uhn.hapi.fhir:hapi-fhir-client:5.7.0'
+
+  implementation 'ca.uhn.hapi.fhir:hapi-fhir-validation:5.7.0'
+  implementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.7.0'
+  implementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3:5.7.0'
+  implementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu2:5.7.0'
   // C-CDA export uses Apache FreeMarker templates
   implementation 'org.freemarker:freemarker:2.3.26-incubating'
 
@@ -104,10 +109,6 @@ dependencies {
   testImplementation 'org.powermock:powermock-module-junit4:1.7.1'
   testImplementation 'org.powermock:powermock-api-mockito2:1.7.1'
   testImplementation 'com.github.tomakehurst:wiremock-jre8:2.26.3'
-  testImplementation 'ca.uhn.hapi.fhir:hapi-fhir-validation:5.7.0'
-  testImplementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.7.0'
-  testImplementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3:5.7.0'
-  testImplementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu2:5.7.0'
   testImplementation 'com.helger:ph-schematron:5.6.5'
   testImplementation 'com.helger:ph-commons:9.5.4'
 }
@@ -156,6 +157,19 @@ task graphviz(type: JavaExec) {
   description 'Generate rule visualization'
   classpath sourceSets.main.runtimeClasspath
   mainClass = "Graphviz"
+}
+
+task flexporter(type: JavaExec) {
+  group 'Application'
+  description 'Apply transformations to FHIR'
+  classpath sourceSets.main.runtimeClasspath
+  mainClass = "RunFlexporter"
+  // args are called "arams" because they are called with -P,
+  // ex. gradle run -Params="['arg1', 'args2']"
+  // see https://stackoverflow.com/questions/27604283/gradle-task-pass-arguments-to-java-application
+  if (project.hasProperty("arams")) {
+    args Eval.me(arams)
+  }
 }
 
 task uberJar(type: Jar) {
