@@ -65,7 +65,7 @@ public class RandomCodeGeneratorTest {
   @Test
   public void throwsWhenNoExpansion() {
     thrown.expect(RuntimeException.class);
-    thrown.expectMessage("ValueSet does not contain expansion");
+    thrown.expectMessage("ValueSet does not contain compose or expansion");
     Mockito
         .when(restTemplate.exchange(ArgumentMatchers.anyString(),
             ArgumentMatchers.eq(HttpMethod.GET),
